@@ -58,7 +58,7 @@ Then install Alpine Linux:
 Log into the VM console and run:
 
 ```sh
-wget -qO- https://raw.githubusercontent.com/alessandrodn/mountbox/main/scripts/update-mountbox | sh
+wget -qO- https://alessandrodn.github.io/mountbox/install | sh
 ```
 
 That's it. The script installs all packages, configures Samba, Avahi, mdev automounting, and sets up the LUKS passphrase management system.
