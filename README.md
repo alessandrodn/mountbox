@@ -1,6 +1,6 @@
 # MountBox
 
-Minimal Alpine Linux aarch64 VM for [UTM](https://mac.getutm.app) on macOS Apple Silicon that auto-mounts ext4 and LUKS-encrypted USB devices and exposes them to Finder via Samba.
+Minimal Alpine Linux VM that auto-mounts ext4 and LUKS-encrypted USB devices and exposes them to Finder via Samba.
 
 ## Why
 
@@ -16,53 +16,33 @@ Plug in a drive, and it shows up in Finder - no drivers, no FUSE, no kernel exte
 - **Bonjour discovery** — the VM advertises itself as `mountbox.local` via Avahi
 - **Time Capsule icon** — appears as a Time Capsule in Finder sidebar (fruit VFS)
 - **Config share** — manage LUKS passphrases from Finder at `smb://mountbox.local/Config`
-- **Tiny footprint** — ~200 MB disk, 512 MB RAM, boots in seconds with Apple Hypervisor
-- **No kernel extensions** — runs entirely in userspace via UTM/QEMU
+- **Tiny footprint** — ~200 MB disk, 512 MB RAM, boots in seconds
+- **Hypervisor agnostic** — works with UTM, VMware Fusion, Parallels, or any VM that runs Alpine Linux
 
 ## Prerequisites
 
-- macOS on Apple Silicon (M1/M2/M3/M4)
-- [UTM](https://mac.getutm.app) installed (free, open source)
+- macOS (Apple Silicon or Intel)
+- A hypervisor with **USB passthrough** support: [UTM](https://mac.getutm.app) (free), VMware Fusion, Parallels, or similar
 - USB card reader or USB storage device
 
-## Quick Start
+## Install
 
-### Option A: Pre-built VM (Releases)
+### 1. Create an Alpine Linux VM
 
-1. Download the latest `.utm` bundle from [Releases](../../releases)
-2. Double-click to import into UTM
-3. Start the VM
-4. Plug in your USB device, click **Ignore** on the macOS disk prompt
-5. In UTM toolbar, click the USB icon and attach your device
-6. Open Finder → Network → **mountbox** → **Media**
-
-### Option B: Build from Scratch
-
-See [Manual Setup](#manual-setup) below.
-
-## Manual Setup
-
-### 1. Create the UTM VM
-
-Open UTM and create a new VM with these settings:
+Create a VM in your hypervisor of choice with these recommended settings:
 
 | Setting | Value |
 |---------|-------|
-| Type | Emulate |
-| Architecture | ARM64 (aarch64) |
-| System | QEMU ARM Virtual Machine |
+| Architecture | aarch64 (ARM) or x86_64 |
 | RAM | 512 MB |
 | Storage | 1 GB |
-| Boot | UEFI |
-| Network | Shared Network |
-| USB | USB 3.0 (XHCI) |
-| Display | virtio-gpu-pci |
-| Hypervisor | Enabled (Use Apple Virtualization) |
+| Network | Shared / Bridged |
+| USB | USB 3.0 (XHCI) passthrough |
 
-### 2. Install Alpine Linux
+Then install Alpine Linux:
 
-1. Download [Alpine Linux Virtual aarch64 ISO](https://alpinelinux.org/downloads/)
-2. Mount the ISO in UTM and boot the VM
+1. Download the [Alpine Linux ISO](https://alpinelinux.org/downloads/) (Virtual edition matches your architecture)
+2. Boot the VM from the ISO
 3. Log in as `root` (no password)
 4. Run `setup-alpine` and follow the prompts:
    - Keyboard: `us` / `us`
@@ -73,23 +53,25 @@ Open UTM and create a new VM with these settings:
    - Disk: `vda`, `sys` mode
 5. Reboot and remove the ISO
 
-### 3. Run the Setup Script
+### 2. Install MountBox
 
-SSH into the VM and run the setup script:
-
-```sh
-ssh root@mountbox.local 'sh -s' < setup.sh
-```
-
-Or clone and pipe:
+SSH into the VM and run:
 
 ```sh
-git clone https://github.com/user/mountbox.git
-cd mountbox
-ssh root@mountbox.local 'sh -s' < setup.sh
+wget -qO- https://raw.githubusercontent.com/alessandrodn/mountbox/main/scripts/update-mountbox | sh
 ```
 
-The script installs all packages, configures Samba, Avahi, mdev automounting, and sets up the LUKS passphrase management system.
+That's it. The script installs all packages, configures Samba, Avahi, mdev automounting, and sets up the LUKS passphrase management system.
+
+## Update
+
+From the VM (or via SSH):
+
+```sh
+update-mountbox
+```
+
+This fetches the latest release from GitHub and re-runs the setup.
 
 ## Daily Usage
 
@@ -97,14 +79,14 @@ The script installs all packages, configures Samba, Avahi, mdev automounting, an
 
 1. Plug the USB device into your Mac
 2. Click **Ignore** when macOS asks about the unreadable disk
-3. In UTM toolbar, click the **USB icon** → attach your device
+3. In your hypervisor, attach/pass through the USB device to the VM
 4. Open Finder → Network → **mountbox** → **Media**
    - Or press **Cmd+K** and enter `smb://mountbox.local/Media`
 
 ### Unmounting
 
 1. Eject the **Media** share in Finder
-2. In UTM toolbar, click the **USB icon** → detach the device
+2. Detach the USB device in your hypervisor
 3. Physically remove the USB device
 
 ### Manual Mount/Unmount
@@ -149,17 +131,7 @@ mount /dev/mapper/luks_sda1 /media/sda1
 
 > [!WARNING]
 > The passphrase is stored in plaintext inside the VM.
-> Anyone with access to your Mac and the UTM VM file can read it.
-
-## UTM VM Settings Reference
-
-The `utm/` directory is a placeholder for your VM's `config.plist`. To export it:
-
-1. In UTM, right-click the VM → **Show in Finder**
-2. Right-click the `.utm` bundle → **Show Package Contents**
-3. Copy `config.plist` to `utm/config.plist`
-
-This is useful for version-controlling your VM configuration or sharing it with others.
+> Anyone with access to your Mac and the VM file can read it.
 
 ## Troubleshooting
 
@@ -175,8 +147,8 @@ This is useful for version-controlling your VM configuration or sharing it with 
 
 ### USB device not detected
 
-- Ensure USB support is enabled in UTM VM settings (USB 3.0 XHCI)
-- Check that you attached the device in UTM toolbar (USB icon)
+- Ensure USB passthrough is enabled in your hypervisor's VM settings
+- Check that you attached the device to the VM
 - Verify the device is visible: `lsusb` and `lsblk` in the VM
 - Check mdev logs: `logread | grep automount`
 
@@ -194,7 +166,7 @@ This is useful for version-controlling your VM configuration or sharing it with 
 
 ### Cannot connect via SSH
 
-- Verify the VM's IP: check UTM's network info or run `ip addr` on the VM console
+- Verify the VM's IP: check your hypervisor's network info or run `ip addr` on the VM console
 - Try connecting by IP: `ssh root@<vm-ip>`
 - Ensure sshd is running: `rc-service sshd status`
 
@@ -211,12 +183,13 @@ mountbox/
 ├── CHANGELOG.md           # Version history
 ├── LICENSE                # MIT
 ├── .gitignore
-├── setup.sh               # Post-install automation script
-├── packages               # Alpine packages to install
+├── setup.sh               # Main setup script (downloads repo, copies files)
+├── packages               # Alpine packages to install (one per line)
 ├── scripts/
 │   ├── mount-sd           # Mount a USB device (handles LUKS)
 │   ├── umount-sd          # Unmount and close LUKS
-│   └── automount-sd       # mdev handler for hot-plug events
+│   ├── automount-sd       # mdev handler for hot-plug events
+│   └── update-mountbox    # Self-updater (fetches latest release)
 ├── config/
 │   ├── smb.conf           # Samba configuration
 │   ├── smb.service        # Avahi service for SMB discovery
@@ -226,7 +199,7 @@ mountbox/
 │   └── mountbox/
 │       └── README.txt     # Instructions in the Config share
 └── utm/
-    └── .gitkeep           # Placeholder for VM config.plist
+    └── .gitkeep           # Placeholder for VM config
 ```
 
 ## Contributing

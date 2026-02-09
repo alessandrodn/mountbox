@@ -8,13 +8,13 @@
 - How to use ------------------------------------
   1. Plug USB device into Mac
   2. Click "Ignore" on macOS disk prompt
-  3. UTM toolbar > USB icon > attach device
+  3. Attach USB device to VM
 
   Finder > Network > mountbox > Media
   or Cmd+K > smb://mountbox.local/Media
 
   To disconnect:
   1. Eject Media share in Finder
-  2. Detach USB in UTM toolbar
+  2. Detach USB from VM
   3. Remove device
 -------------------------------------------------
