@@ -224,7 +224,7 @@ mountbox/
 1. Fork the repository
 2. Create a feature branch: `git checkout -b my-feature`
 3. Make your changes
-4. Test by running `sh setup.sh` in a fresh Alpine VM
+4. Test in a fresh Alpine VM: `VERSION=x.y.z sh setup.sh`
 5. Submit a pull request
 
 ## License

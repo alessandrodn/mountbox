@@ -11,7 +11,7 @@ echo ""
 # --- Download repo tarball ---
 echo "Downloading MountBox v${VERSION}..."
 TMP=$(mktemp -d)
-trap "rm -rf $TMP" EXIT
+trap 'rm -rf "$TMP"' EXIT
 wget -qO- "https://github.com/$REPO/archive/v${VERSION}.tar.gz" | tar xz -C "$TMP"
 SRC="$TMP/mountbox-${VERSION}"
 
@@ -24,9 +24,9 @@ apk add $(tr '\n' ' ' < "$SRC/packages")
 echo "mountbox" > /etc/hostname
 hostname mountbox
 
-# --- Copy configs ---
-cp "$SRC/config/motd" /etc/motd
-cp "$SRC/config/issue" /etc/issue
+# --- Copy configs (stamp version) ---
+sed "s/%%VERSION%%/v${VERSION}/g" "$SRC/config/motd" > /etc/motd
+sed "s/%%VERSION%%/v${VERSION}/g" "$SRC/config/issue" > /etc/issue
 
 mkdir -p /etc/samba
 cp "$SRC/config/smb.conf" /etc/samba/smb.conf
@@ -38,7 +38,7 @@ mkdir -p /etc/conf.d
 cp "$SRC/config/consolefont" /etc/conf.d/consolefont
 
 mkdir -p /etc/mountbox
-cp "$SRC/config/mountbox/README.txt" /etc/mountbox/README.txt
+sed "s/%%VERSION%%/v${VERSION}/g" "$SRC/config/mountbox/README.txt" > /etc/mountbox/README.txt
 
 mkdir -p /etc/ssh/sshd_config.d
 cp "$SRC/config/sshd_mountbox.conf" /etc/ssh/sshd_config.d/mountbox.conf

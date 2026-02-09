@@ -1,4 +1,4 @@
-MountBox v1.0.0
+MountBox %%VERSION%%
 ===============
 
 SSH Access
