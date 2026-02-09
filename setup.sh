@@ -12,8 +12,8 @@ echo ""
 echo "Downloading MountBox v${VERSION}..."
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
-wget -qO- "https://github.com/$REPO/archive/v${VERSION}.tar.gz" | tar xz -C "$TMP"
-SRC="$TMP/mountbox-${VERSION}"
+wget -qO- "https://github.com/$REPO/archive/v${VERSION}.tar.gz" | tar xz -C "$TMP" --strip-components=1
+SRC="$TMP"
 
 # --- Install packages ---
 echo "Installing packages..."
@@ -76,6 +76,7 @@ rc-update add consolefont boot 2>/dev/null || true
 # --- Start services ---
 rc-service samba start 2>/dev/null || rc-service samba restart
 rc-service avahi-daemon start 2>/dev/null || rc-service avahi-daemon restart
+rc-service sshd start 2>/dev/null || rc-service sshd restart
 rc-service consolefont start 2>/dev/null || true
 
 echo ""

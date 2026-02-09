@@ -13,9 +13,13 @@ MOUNT_DEV="$SD_DEV"
 MOUNT_POINT="$(mount | grep "^$MOUNT_DEV " | awk '{print $3}')"
 
 if [ -n "$MOUNT_POINT" ]; then
-    umount "$MOUNT_POINT" 2>/dev/null || true
-    rmdir "$MOUNT_POINT" 2>/dev/null || true
-    echo "Unmounted $MOUNT_POINT"
+    if umount "$MOUNT_POINT" 2>/dev/null; then
+        rmdir "$MOUNT_POINT" 2>/dev/null || true
+        echo "Unmounted $MOUNT_POINT"
+    else
+        echo "Failed to unmount $MOUNT_POINT" >&2
+        exit 1
+    fi
 fi
 
 if [ -e "/dev/mapper/$LUKS_NAME" ]; then
