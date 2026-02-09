@@ -1,0 +1,15 @@
+#!/bin/sh
+set -e
+REPO="alessandrodn/mountbox"
+
+echo "Checking latest version..."
+VERSION=$(wget -qO- "https://api.github.com/repos/$REPO/releases/latest" \
+  | grep '"tag_name"' | sed 's/.*"v//;s/".*//')
+
+if [ -z "$VERSION" ]; then
+    echo "Error: Could not determine latest version."
+    exit 1
+fi
+
+echo "Updating MountBox to v${VERSION}..."
+wget -qO- "https://raw.githubusercontent.com/$REPO/v${VERSION}/setup.sh" | VERSION=$VERSION sh

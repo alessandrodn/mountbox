@@ -1,5 +1,5 @@
-MountBox Configuration
-======================
+MountBox v1.0.0
+===============
 
 To enable automatic unencryption, create a file called
 "encryption-key.txt" in this folder containing the encryption passphrase.
