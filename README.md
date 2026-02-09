@@ -55,7 +55,7 @@ Then install Alpine Linux:
 
 ### 2. Install MountBox
 
-SSH into the VM and run:
+Log into the VM console and run:
 
 ```sh
 wget -qO- https://raw.githubusercontent.com/alessandrodn/mountbox/main/scripts/update-mountbox | sh
