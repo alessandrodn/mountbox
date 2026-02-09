@@ -17,4 +17,10 @@
   1. Eject Media share in Finder
   2. Detach USB from VM
   3. Remove device
+
+- SSH access -----------------------------------
+  Drop your public key into the Config share:
+  Cmd+K > smb://mountbox.local/Config
+  Save as "authorized_keys"
+  Then: ssh root@mountbox.local
 -------------------------------------------------

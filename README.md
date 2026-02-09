@@ -101,6 +101,22 @@ mount-sd /dev/sda1
 umount-sd /dev/sda1
 ```
 
+## SSH Access
+
+By default MountBox is managed via the VM console. To enable SSH, drop your public key into the Config share:
+
+1. In Finder, press **Cmd+K** and connect to `smb://mountbox.local/Config`
+2. Create a file called `authorized_keys`
+3. Paste the contents of your public key (e.g. `~/.ssh/id_ed25519.pub`) and save
+
+Then connect:
+
+```sh
+ssh root@mountbox.local
+```
+
+sshd reads `authorized_keys` on every connection — no restart needed. Password login is disabled; only key-based auth is allowed.
+
 ## LUKS Encrypted Drives
 
 MountBox supports LUKS-encrypted drives. There are three ways to provide the passphrase:
@@ -196,6 +212,7 @@ mountbox/
 │   ├── motd               # Login banner
 │   ├── issue              # TTY login screen
 │   ├── consolefont        # Console font configuration
+│   ├── sshd_mountbox.conf # sshd drop-in (key-only root login)
 │   └── mountbox/
 │       └── README.txt     # Instructions in the Config share
 └── utm/
