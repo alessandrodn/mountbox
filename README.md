@@ -16,7 +16,7 @@ Plug in a drive, and it shows up in Finder - no drivers, no FUSE, no kernel exte
 - **Bonjour discovery** — the VM advertises itself as `mountbox.local` via Avahi
 - **Time Capsule icon** — appears as a Time Capsule in Finder sidebar (fruit VFS)
 - **Config share** — manage LUKS passphrases from Finder at `smb://mountbox.local/Config`
-- **Tiny footprint** — ~200 MB disk, 512 MB RAM, boots in seconds
+- **Tiny footprint** — ~200 MB disk, 1 GB RAM, boots in seconds
 - **Hypervisor agnostic** — works with UTM, VMware Fusion, Parallels, or any VM that runs Alpine Linux
 
 ## Prerequisites
@@ -34,7 +34,7 @@ Create a VM in your hypervisor of choice with these recommended settings:
 | Setting | Value |
 |---------|-------|
 | Architecture | aarch64 (ARM) or x86_64 |
-| RAM | 512 MB |
+| RAM | 1 GB |
 | Storage | 1 GB |
 | Network | Shared / Bridged |
 | USB | USB 3.0 (XHCI) passthrough |
@@ -217,8 +217,6 @@ mountbox/
 │   ├── sshd_mountbox.conf # sshd drop-in (key-only root login)
 │   └── mountbox/
 │       └── README.txt     # Instructions in the Config share
-└── utm/
-    └── .gitkeep           # Placeholder for VM config
 ```
 
 ## Contributing
@@ -226,7 +224,7 @@ mountbox/
 1. Fork the repository
 2. Create a feature branch: `git checkout -b my-feature`
 3. Make your changes
-4. Test by running `setup.sh` against a fresh Alpine VM
+4. Test by running `sh setup.sh` in a fresh Alpine VM
 5. Submit a pull request
 
 ## License

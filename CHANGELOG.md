@@ -2,7 +2,7 @@
 
 ## v1.0.0 — 2026-02-09
 - Initial release
-- Alpine Linux aarch64 VM for UTM on macOS Apple Silicon
+- Alpine Linux VM for macOS (any hypervisor with USB passthrough)
 - Auto-mount ext4/LUKS USB devices via mdev
 - Samba guest access — browse files in Finder
 - Bonjour/Avahi discovery (mountbox.local)
