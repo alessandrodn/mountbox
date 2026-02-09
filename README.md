@@ -182,6 +182,8 @@ mount /dev/mapper/luks_sda1 /media/sda1
 
 ### Cannot connect via SSH
 
+- Ensure your public key is in the Config share: `cat /etc/mountbox/authorized_keys`
+- Password login is disabled — only key-based auth works
 - Verify the VM's IP: check your hypervisor's network info or run `ip addr` on the VM console
 - Try connecting by IP: `ssh root@<vm-ip>`
 - Ensure sshd is running: `rc-service sshd status`
