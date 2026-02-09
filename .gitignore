@@ -1,0 +1,4 @@
+*.utm
+*.qcow2
+*.iso
+.DS_Store
