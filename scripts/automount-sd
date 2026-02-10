@@ -3,11 +3,9 @@ DEV="/dev/${MDEV}"
 
 case "$ACTION" in
   add)
-    OUT=$(/usr/local/bin/mount-sd "$DEV" 2>&1) || logger -t automount "mount-sd failed for $DEV"
-    [ -n "$OUT" ] && echo "$OUT" | logger -t automount
+    /usr/local/bin/mount-sd "$DEV" 2>&1 | logger -t automount
     ;;
   remove)
-    OUT=$(/usr/local/bin/umount-sd "$DEV" 2>&1) || logger -t automount "umount-sd failed for $DEV"
-    [ -n "$OUT" ] && echo "$OUT" | logger -t automount
+    /usr/local/bin/umount-sd "$DEV" 2>&1 | logger -t automount
     ;;
 esac
