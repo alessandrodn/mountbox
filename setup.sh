@@ -55,10 +55,10 @@ cp "$SRC/scripts/automount-sd" /usr/local/bin/automount-sd
 cp "$SRC/scripts/update-mountbox" /usr/local/bin/update-mountbox
 chmod +x /usr/local/bin/mount-sd /usr/local/bin/umount-sd /usr/local/bin/automount-sd /usr/local/bin/update-mountbox
 
-# --- Add mdev rule (BEFORE persistent-storage line) ---
+# --- Add mdev rule (BEFORE persistent-storage block) ---
 if ! grep -q 'automount-sd' /etc/mdev.conf; then
-    if grep -q 'sd\[a-z\]\..*persistent-storage' /etc/mdev.conf; then
-        sed -i '/sd\[a-z\]\..*persistent-storage/i sd[a-z][0-9]+   root:root 660 */usr/local/bin/automount-sd' /etc/mdev.conf
+    if grep -q '^# persistent storage' /etc/mdev.conf; then
+        sed -i '/^# persistent storage/i # removable storage\nsd[a-z][0-9]+   root:root 660 */usr/local/bin/automount-sd\n' /etc/mdev.conf
     else
         echo 'sd[a-z][0-9]+   root:root 660 */usr/local/bin/automount-sd' >> /etc/mdev.conf
     fi
