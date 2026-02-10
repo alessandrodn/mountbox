@@ -13,7 +13,7 @@ if cryptsetup isLuks "$SD_DEV" 2>/dev/null; then
     if [ ! -e "/dev/mapper/$LUKS_NAME" ]; then
         # Save passphrase if provided as second argument
         if [ -n "$2" ]; then
-            echo -n "$2" > "$PASSPHRASE_FILE"
+            printf '%s' "$2" > "$PASSPHRASE_FILE"
             chmod 600 "$PASSPHRASE_FILE"
             echo "Passphrase saved to $PASSPHRASE_FILE"
         fi
