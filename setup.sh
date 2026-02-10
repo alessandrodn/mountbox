@@ -45,7 +45,7 @@ cp "$SRC/config/sshd_mountbox.conf" /etc/ssh/sshd_config.d/mountbox.conf
 
 # Ensure sshd_config includes drop-in directory (idempotent)
 if ! grep -q '^Include /etc/ssh/sshd_config.d/\*.conf' /etc/ssh/sshd_config; then
-    sed -i '1s;^;Include /etc/ssh/sshd_config.d/*.conf\n;' /etc/ssh/sshd_config
+    sed -i '1i Include /etc/ssh/sshd_config.d/*.conf' /etc/ssh/sshd_config
 fi
 
 # --- Copy scripts ---
