@@ -22,8 +22,12 @@ if [ -n "$MOUNT_POINT" ]; then
 fi
 
 if [ -e "/dev/mapper/$LUKS_NAME" ]; then
-    cryptsetup luksClose "$LUKS_NAME"
-    echo "LUKS volume closed."
+    if cryptsetup luksClose "$LUKS_NAME"; then
+        echo "LUKS volume closed."
+    else
+        echo "Failed to close LUKS volume $LUKS_NAME" >&2
+        exit 1
+    fi
 fi
 
 echo "Safe to remove USB device."

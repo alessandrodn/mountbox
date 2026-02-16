@@ -15,7 +15,7 @@ Then connect: ssh root@mountbox.local
 
 LUKS Encryption
 ---------------
-To enable automatic unencryption, create a file called
+To enable automatic decryption, create a file called
 "encryption-key.txt" in this folder containing the encryption passphrase.
 
 The file should contain only the passphrase, nothing else.
