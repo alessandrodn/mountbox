@@ -24,5 +24,7 @@ fi
 
 if [ -e "/dev/mapper/$LUKS_NAME" ]; then
     cryptsetup luksClose "$LUKS_NAME"
-    echo "LUKS closed."
+    echo "LUKS volume closed."
 fi
+
+echo "Safe to remove USB device."
