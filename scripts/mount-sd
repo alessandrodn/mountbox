@@ -1,0 +1,42 @@
+#!/bin/sh
+set -e
+
+SD_DEV="${1:-/dev/sda1}"
+DEV_NAME="$(basename "$SD_DEV")"
+LUKS_NAME="luks_${DEV_NAME}"
+PASSPHRASE_FILE="/etc/mountbox/encryption-key.txt"
+BASE_DIR="/media"
+MOUNT_DEV="$SD_DEV"
+
+# Unlock LUKS if needed
+if cryptsetup isLuks "$SD_DEV" 2>/dev/null; then
+    if [ ! -e "/dev/mapper/$LUKS_NAME" ]; then
+        # Save passphrase if provided as second argument
+        if [ -n "$2" ]; then
+            printf '%s' "$2" > "$PASSPHRASE_FILE"
+            chmod 600 "$PASSPHRASE_FILE"
+            echo "Passphrase saved to $PASSPHRASE_FILE"
+        fi
+
+        if [ -f "$PASSPHRASE_FILE" ] && \
+           cryptsetup luksOpen "$SD_DEV" "$LUKS_NAME" --key-file "$PASSPHRASE_FILE" 2>/dev/null; then
+            echo "LUKS auto-unlocked on $SD_DEV"
+        else
+            echo "Error: LUKS device $SD_DEV cannot be unlocked."
+            echo "No passphrase stored or passphrase didn't match."
+            echo "Create encryption-key.txt in the Config share, or run:"
+            echo "  mount-sd $SD_DEV <passphrase>"
+            exit 1
+        fi
+    fi
+    MOUNT_DEV="/dev/mapper/$LUKS_NAME"
+fi
+
+# Use filesystem label if available, otherwise device name
+LABEL="$(blkid -s LABEL -o value "$MOUNT_DEV" 2>/dev/null | tr ' /' '_-')"
+MOUNT_NAME="${LABEL:-$DEV_NAME}"
+MOUNT_POINT="${BASE_DIR}/${MOUNT_NAME}"
+
+mkdir -p "$MOUNT_POINT"
+mount -t auto "$MOUNT_DEV" "$MOUNT_POINT"
+echo "Mounted at $MOUNT_POINT"

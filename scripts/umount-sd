@@ -1,0 +1,33 @@
+#!/bin/sh
+set -e
+
+SD_DEV="${1:-/dev/sda1}"
+DEV_NAME="$(basename "$SD_DEV")"
+LUKS_NAME="luks_${DEV_NAME}"
+
+# Find mount point for this device
+MOUNT_DEV="$SD_DEV"
+[ -e "/dev/mapper/$LUKS_NAME" ] && MOUNT_DEV="/dev/mapper/$LUKS_NAME"
+
+MOUNT_POINT="$(mount | grep "^$MOUNT_DEV " | awk '{print $3}')"
+
+if [ -n "$MOUNT_POINT" ]; then
+    if umount "$MOUNT_POINT" 2>/dev/null; then
+        rmdir "$MOUNT_POINT" 2>/dev/null || true
+        echo "Unmounted $MOUNT_POINT"
+    else
+        echo "Failed to unmount $MOUNT_POINT" >&2
+        exit 1
+    fi
+fi
+
+if [ -e "/dev/mapper/$LUKS_NAME" ]; then
+    if cryptsetup luksClose "$LUKS_NAME"; then
+        echo "LUKS volume closed."
+    else
+        echo "Failed to close LUKS volume $LUKS_NAME" >&2
+        exit 1
+    fi
+fi
+
+echo "Safe to remove USB device."
