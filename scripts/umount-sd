@@ -4,7 +4,6 @@ set -e
 SD_DEV="${1:-/dev/sda1}"
 DEV_NAME="$(basename "$SD_DEV")"
 LUKS_NAME="luks_${DEV_NAME}"
-BASE_DIR="/media"
 
 # Find mount point for this device
 MOUNT_DEV="$SD_DEV"
