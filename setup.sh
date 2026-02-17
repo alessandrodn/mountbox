@@ -11,7 +11,7 @@ for arg in "$@"; do
 done
 
 # --- Version check ---
-VERSION_FILE="/etc/mountbox/VERSION"
+VERSION_FILE="/etc/mountbox/VERSION.txt"
 if [ "$FORCE" -eq 0 ] && [ -f "$VERSION_FILE" ] && [ "$(cat "$VERSION_FILE")" = "$VERSION" ]; then
     echo "MountBox v${VERSION} is already installed. Use --force to reinstall."
     exit 0
