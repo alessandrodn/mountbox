@@ -1,6 +1,12 @@
 #!/bin/sh
 set -e
 REPO="alessandrodn/mountbox"
+FORCE=""
+for arg in "$@"; do
+    case "$arg" in
+        --force) FORCE="--force" ;;
+    esac
+done
 
 echo "Checking latest version..."
 VERSION=$(wget -qO- "https://api.github.com/repos/$REPO/releases/latest" \
@@ -12,4 +18,4 @@ if [ -z "$VERSION" ]; then
 fi
 
 echo "Updating MountBox to v${VERSION}..."
-wget -qO- "https://raw.githubusercontent.com/$REPO/v${VERSION}/setup.sh" | VERSION=$VERSION sh
+wget -qO- "https://raw.githubusercontent.com/$REPO/v${VERSION}/setup.sh" | VERSION=$VERSION sh -s -- $FORCE
