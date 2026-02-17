@@ -3,19 +3,6 @@ set -e
 
 REPO="alessandrodn/mountbox"
 VERSION="${VERSION:?Usage: VERSION=x.y.z sh setup.sh}"
-FORCE=0
-for arg in "$@"; do
-    case "$arg" in
-        --force) FORCE=1 ;;
-    esac
-done
-
-# --- Version check ---
-VERSION_FILE="/etc/mountbox/VERSION.txt"
-if [ "$FORCE" -eq 0 ] && [ -f "$VERSION_FILE" ] && [ "$(cat "$VERSION_FILE")" = "$VERSION" ]; then
-    echo "MountBox v${VERSION} is already installed. Use --force to reinstall."
-    exit 0
-fi
 
 echo "=== MountBox v${VERSION} Setup ==="
 echo "Configuring Alpine Linux as a USB mount server..."
@@ -105,7 +92,7 @@ rc-service sshd start 2>/dev/null || rc-service sshd restart
 rc-service consolefont start 2>/dev/null || true
 
 # --- Stamp installed version ---
-echo "$VERSION" > "$VERSION_FILE"
+echo "$VERSION" > /etc/mountbox/VERSION.txt
 
 echo ""
 echo "=== MountBox v${VERSION} setup complete ==="

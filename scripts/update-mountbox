@@ -1,10 +1,11 @@
 #!/bin/sh
 set -e
 REPO="alessandrodn/mountbox"
-FORCE=""
+VERSION_FILE="/etc/mountbox/VERSION.txt"
+FORCE=0
 for arg in "$@"; do
     case "$arg" in
-        --force) FORCE="--force" ;;
+        --force) FORCE=1 ;;
     esac
 done
 
@@ -17,5 +18,10 @@ if [ -z "$VERSION" ]; then
     exit 1
 fi
 
+if [ "$FORCE" -eq 0 ] && [ -f "$VERSION_FILE" ] && [ "$(cat "$VERSION_FILE")" = "$VERSION" ]; then
+    echo "MountBox v${VERSION} is already installed. Use --force to reinstall."
+    exit 0
+fi
+
 echo "Updating MountBox to v${VERSION}..."
-wget -qO- "https://raw.githubusercontent.com/$REPO/v${VERSION}/setup.sh" | VERSION=$VERSION sh -s -- $FORCE
+wget -qO- "https://raw.githubusercontent.com/$REPO/v${VERSION}/setup.sh" | VERSION=$VERSION sh
