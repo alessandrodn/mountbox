@@ -13,7 +13,6 @@ done
 # --- Version check ---
 VERSION_FILE="/etc/mountbox/VERSION"
 if [ "$FORCE" -eq 0 ] && [ -f "$VERSION_FILE" ] && [ "$(cat "$VERSION_FILE")" = "$VERSION" ]; then
-    logger -t mountbox "Setup skipped: v${VERSION} is already installed (use --force to reinstall)"
     echo "MountBox v${VERSION} is already installed. Use --force to reinstall."
     exit 0
 fi
