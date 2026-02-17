@@ -1,5 +1,12 @@
 # MountBox
 
+![License: MIT](https://img.shields.io/github/license/alessandrodn/mountbox)
+![GitHub Release](https://img.shields.io/github/v/release/alessandrodn/mountbox)
+![Platform](https://img.shields.io/badge/platform-macOS-lightgrey)
+![Alpine Linux](https://img.shields.io/badge/OS-Alpine%20Linux-0D597F?logo=alpinelinux&logoColor=white)
+![Shell](https://img.shields.io/badge/language-Shell-green)
+![Arch](https://img.shields.io/badge/arch-aarch64%20%7C%20x86__64-blue)
+
 Minimal Alpine Linux VM that auto-mounts ext4 and LUKS-encrypted USB devices and exposes them to Finder via Samba.
 
 ## Why
