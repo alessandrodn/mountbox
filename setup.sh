@@ -46,6 +46,12 @@ if [ ! -f /etc/mountbox/encryption-key.txt ]; then
     chmod 600 /etc/mountbox/encryption-key.txt
 fi
 
+# Template: authorized keys (do not overwrite existing)
+if [ ! -f /etc/mountbox/authorized_keys ]; then
+    cp "$SRC/config/mountbox/authorized_keys" /etc/mountbox/authorized_keys
+    chmod 600 /etc/mountbox/authorized_keys
+fi
+
 mkdir -p /etc/ssh/sshd_config.d
 cp "$SRC/config/sshd_mountbox.conf" /etc/ssh/sshd_config.d/mountbox.conf
 
