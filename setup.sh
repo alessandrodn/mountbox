@@ -40,6 +40,12 @@ cp "$SRC/config/consolefont" /etc/conf.d/consolefont
 mkdir -p /etc/mountbox
 sed "s/%%VERSION%%/v${VERSION}/g" "$SRC/config/mountbox/README.txt" > /etc/mountbox/README.txt
 
+# Template: encryption key (do not overwrite existing)
+if [ ! -f /etc/mountbox/encryption-key.txt ]; then
+    cp "$SRC/config/mountbox/encryption-key.txt" /etc/mountbox/encryption-key.txt
+    chmod 600 /etc/mountbox/encryption-key.txt
+fi
+
 mkdir -p /etc/ssh/sshd_config.d
 cp "$SRC/config/sshd_mountbox.conf" /etc/ssh/sshd_config.d/mountbox.conf
 
