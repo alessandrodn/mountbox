@@ -1,6 +1,13 @@
 #!/bin/sh
 set -e
 REPO="alessandrodn/mountbox"
+VERSION_FILE="/etc/mountbox/VERSION.txt"
+FORCE=0
+for arg in "$@"; do
+    case "$arg" in
+        --force) FORCE=1 ;;
+    esac
+done
 
 echo "Checking latest version..."
 VERSION=$(wget -qO- "https://api.github.com/repos/$REPO/releases/latest" \
@@ -9,6 +16,11 @@ VERSION=$(wget -qO- "https://api.github.com/repos/$REPO/releases/latest" \
 if [ -z "$VERSION" ]; then
     echo "Error: Could not determine latest version."
     exit 1
+fi
+
+if [ "$FORCE" -eq 0 ] && [ -f "$VERSION_FILE" ] && [ "$(cat "$VERSION_FILE")" = "$VERSION" ]; then
+    echo "MountBox v${VERSION} is already installed. Use --force to reinstall."
+    exit 0
 fi
 
 echo "Updating MountBox to v${VERSION}..."

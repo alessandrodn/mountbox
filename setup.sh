@@ -91,6 +91,9 @@ rc-service avahi-daemon start 2>/dev/null || rc-service avahi-daemon restart
 rc-service sshd start 2>/dev/null || rc-service sshd restart
 rc-service consolefont start 2>/dev/null || true
 
+# --- Stamp installed version ---
+echo "$VERSION" > /etc/mountbox/VERSION.txt
+
 echo ""
 echo "=== MountBox v${VERSION} setup complete ==="
 echo "Hostname: mountbox"
